@@ -77,4 +77,22 @@ productRouter.get("/api/deal-of-day", auth, async (req, res) => {
   }
 });
 
+productRouter.get("/api/price-drop", auth, async (req, res) => {
+  try {
+    let products = await Product.find({});
+
+    products.sort((a, b) => {
+      return a.price - b.price;
+    });
+
+    if (products.length === 0) {
+      throw new Error("No products found");
+    }
+
+    res.json(products[0]);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = productRouter;
